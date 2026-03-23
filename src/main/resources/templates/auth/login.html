@@ -11,6 +11,8 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/common.js"></script>
     <script src="/js/qrpay_sdk.dev.js"></script>
+    <script src="/js/qrpay-bridge.js"></script>
+    <script src="/js/qrpay-nfilter.js"></script>
     <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'local')}">
       <script th:src="@{/js/qrpay_sdk.dev.js}"></script>
     </th:block>
