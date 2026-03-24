@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style th:fragment="amountInputStyle">
+        .payment-method-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .payment-method-btn { flex: 1; cursor: pointer; }
+        .payment-method-btn .method-label {
+          display: block; padding: 12px 20px; border: 2px solid #e0e0e0;
+          border-radius: 8px; text-align: center; font-size: 14px; font-weight: 500;
+          transition: all 0.3s ease; background: #f9f9f9;
+        }
+        .payment-method-btn input:checked + .method-label,
+        .payment-method-btn.active .method-label {
+          border-color: #e73d44; background: #e73d44; color: white;
+        }
+        .installment-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .installment-btn {
+          padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;
+          background: white; cursor: pointer; font-size: 13px; transition: all 0.2s ease; font-weight: 500;
+        }
+        .installment-btn:hover { border-color: #dc3545; background: #ffe5e8; }
+        .installment-btn.selected { border-color: #e73d44; background: #e73d44; color: white; }
+        .installment-selected { padding: 12px; background: #f5f5f5; border-radius: 6px; text-align: center; }
+        @media (max-width: 576px) { .installment-grid { grid-template-columns: repeat(3, 1fr); } }
+    </style>
+</head>
+<body>
+
+<div th:fragment="amountInputSection(merchantName)" id="state-amountinput" style="display: none">
+    <header id="hd">
+        <div class="container">
+            <button type="button" class="icon-back" onclick="onChangeState('state-mpmqr');">이전 페이지 이동</button>
+            <h1>QR코드 금액 입력</h1>
+            <a class="icon-home" href="javascript:void(0)" onclick="onChangeState('state-mpmqr');">홈으로 이동</a>
+        </div>
+    </header>
+
+    <div id="ct">
+        <div class="cnt-btm-wrp">
+            <div class="container">
+                <div class="frm pt50">
+                    <div class="form-group">
+                        <span id="amountinput-merchant-name" class="tit" th:text="${merchantName}">가맹점명</span>
+                        <div class="input-price input-delete">
+                            <span class="txt font-lato">&#8361;</span>
+                            <input id="mpmqr-amount" type="text" class="form-control font-lato" placeholder="금액 입력" onkeyup="inputNumberFormat(this)" />
+                            <button id="init-mpmqr-amount" type="button" class="btn-delete">
+                                <img src="/images/icon/icon_delete.png" alt="삭제" />
+                            </button>
+                        </div>
+                        <p class="text-muted mt10" id="mpmqr-amount-desc"></p>
+                    </div>
+
+                    <div class="form-group">
+                        <p class="tit text-muted mb15">일시불, 할부</p>
+                        <div class="payment-method-group">
+                            <label class="payment-method-btn active">
+                                <input type="radio" name="radio1" value="lumpsum" checked style="display: none" />
+                                <span class="method-label">일시불</span>
+                            </label>
+                            <label class="payment-method-btn">
+                                <input type="radio" name="radio1" value="installment" style="display: none" />
+                                <span class="method-label">할부</span>
+                            </label>
+                        </div>
+
+                        <div id="installment-area" class="installment-container" style="display: none; margin-top: 20px">
+                            <p class="tit text-muted mb10">할부 기간 선택</p>
+                            <div class="installment-grid">
+                                <button th:each="month : ${#numbers.sequence(2, 24)}"
+                                        type="button" class="installment-btn"
+                                        th:data-value="${month}" th:text="${month + '개월'}"></button>
+                            </div>
+                            <div class="installment-selected mt15">
+                                <p class="text-center text-muted"><span id="installmentSpan" class="font-weight-bold">2개월</span></p>
+                            </div>
+                            <input id="installment-select" type="hidden" value="2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btm-fixed-btn">
+                <a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="onAmoutInputConfirm();">확인</a>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        (function() {
+          const radioButtons = document.querySelectorAll('input[name="radio1"]');
+          const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
+          const installmentArea = document.getElementById('installment-area');
+          const installmentSpan = document.getElementById('installmentSpan');
+          const installmentSelect = document.getElementById('installment-select');
+          const installmentBtns = document.querySelectorAll('.installment-btn');
+
+          // 할부/일시불 전환 로직
+          radioButtons.forEach((radio, index) => {
+            radio.addEventListener('change', function () {
+              paymentMethodBtns.forEach((b) => b.classList.remove('active'));
+              paymentMethodBtns[index].classList.add('active');
+
+              const isInstallment = this.value === 'installment';
+              const amountValue = document.getElementById('mpmqr-amount').value.replace(/,/g, '');
+
+              if (isInstallment) {
+                if (!amountValue || parseInt(amountValue) < 50000) {
+                  alert('할부는 최소 50,000원 이상이어야 합니다.');
+                  radioButtons[0].checked = true;
+                  paymentMethodBtns[0].classList.add('active');
+                  paymentMethodBtns[1].classList.remove('active');
+                  return;
+                }
+                installmentArea.style.display = 'block';
+                installmentBtns[0].click();
+              } else {
+                installmentArea.style.display = 'none';
+                installmentSelect.value = '2';
+                installmentSpan.innerText = '2개월';
+              }
+            });
+          });
+
+          // 할부 개월수 선택 로직
+          installmentBtns.forEach((btn) => {
+            btn.addEventListener('click', function (e) {
+              e.preventDefault();
+              const value = this.getAttribute('data-value');
+              installmentBtns.forEach((b) => b.classList.remove('selected'));
+              this.classList.add('selected');
+              installmentSelect.value = value;
+              installmentSpan.innerText = value + '개월';
+            });
+          });
+
+          // 초기값 설정
+          if(installmentBtns.length > 0) installmentBtns[0].classList.add('selected');
+
+          // 금액 입력 실시간 포맷팅
+          document.getElementById('mpmqr-amount').addEventListener('input', function () {
+            const val = this.value.replace(/,/g, '');
+            if (val === '') {
+              document.getElementById('mpmqr-amount-desc').innerText = '';
+              return;
+            }
+            document.getElementById('mpmqr-amount-desc').innerText = parseInt(val, 10).toLocaleString() + '원';
+          });
+
+          // 삭제 버튼
+          document.getElementById('init-mpmqr-amount').addEventListener('click', onInitAmountInputState);
+        })();
+
+        // 외부 호출용 함수
+        function onInitAmountInputState() {
+          document.getElementById('mpmqr-amount').value = '';
+          document.getElementById('mpmqr-amount-desc').innerText = '';
+          document.querySelector('input[name="radio1"][value="lumpsum"]').checked = true;
+          document.querySelectorAll('.payment-method-btn')[0].classList.add('active');
+          document.querySelectorAll('.payment-method-btn')[1].classList.remove('active');
+          document.getElementById('installment-area').style.display = 'none';
+          document.getElementById('installment-select').value = '2';
+          document.getElementById('installmentSpan').innerText = '2개월';
+        }
+
+        async function onAmoutInputConfirm() {
+          const radioBtnValue = document.querySelector('input[name="radio1"]:checked').value;
+          const installmentValue = radioBtnValue === 'lumpsum' ? 0 : document.getElementById('installment-select').value;
+          const amountValue = document.getElementById('mpmqr-amount').value.replace(/,/g, '');
+
+          if (!amountValue) {
+            alert('금액을 입력해주세요.');
+            return;
+          } else if (parseInt(amountValue) < 10) {
+            alert('금액은 최소 10원 이상이어야 합니다.');
+            return;
+          }
+
+          let reqData = {
+            pim: 'DYNAMIC',
+            amount: Number(amountValue),
+            installment: Number(installmentValue),
+          };
+
+          try {
+            const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.MPMQR, reqData);
+            if (data.ok) {
+              onQrInfoUpdate(data);
+              onChangeState('state-mpmqr');
+              onInitAmountInputState();
+            } else if (data.status === 401) {
+              const loginId = document.getElementById('navi-login-id').innerText;
+              PasswordModal.open({
+                loginId: loginId,
+                onSuccessCallback: () => onAmoutInputConfirm()
+              });
+            } else {
+              alert(data.message || '요청에 실패했습니다.');
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+    </script>
+</div>
+
+</body>
+</html>

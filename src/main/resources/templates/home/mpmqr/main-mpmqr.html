@@ -100,308 +100,9 @@
         </div>
       </div>
     </div>
-
-    <div id="state-amountinput" style="display: none">
-      <!-- header -->
-      <header id="hd">
-        <div class="container">
-          <button type="button" class="icon-back" onclick="onChangeState();">이전 페이지 이동</button>
-          <h1>결제 금액 입력</h1>
-          <a class="icon-home" href="javascript:void(0)" onclick="onChangeState();">홈으로 이동</a>
-        </div>
-      </header>
-      <!-- container -->
-      <div id="ct">
-        <!-- 페이지 시작 -->
-        <div class="cnt-btm-wrp">
-          <div class="container">
-            <div class="frm pt50">
-              <div class="form-group">
-                <span id="amountinput-merchant-name" class="tit" th:text="${homeMpmqrResDto.homeMpmqrMain.merchantName}">Merchant-NameSpan></span>
-                <div class="input-price input-delete">
-                  <span class="txt font-lato">&#8361;</span>
-                  <input id="mpmqr-amount" type="text" class="form-control font-lato" value="" onkeyup="inputNumberFormat(this)" />
-                  <button id="init-mpmqr-amount" type="button" class="btn-delete"><img src="/images/icon/icon_delete.png" alt="삭제" /></button>
-                </div>
-                <p class="text-muted mt10" id="mpmqr-amount-desc"></p>
-              </div>
-              <div class="form-group">
-                <p class="tit text-muted mb15">일시불, 할부</p>
-                <div class="payment-method-group">
-                  <label class="payment-method-btn active">
-                    <input type="radio" name="radio1" value="lumpsum" checked style="display: none" />
-                    <span class="method-label">일시불</span>
-                  </label>
-                  <label class="payment-method-btn">
-                    <input type="radio" value="installment" name="radio1" style="display: none" />
-                    <span class="method-label">할부</span>
-                  </label>
-                </div>
-
-                <div id="installment-area" class="installment-container" style="display: none; margin-top: 20px">
-                  <p class="tit text-muted mb10">할부 기간 선택</p>
-                  <div class="installment-grid">
-                    <button type="button" class="installment-btn" data-value="2">2개월</button>
-                    <button type="button" class="installment-btn" data-value="3">3개월</button>
-                    <button type="button" class="installment-btn" data-value="4">4개월</button>
-                    <button type="button" class="installment-btn" data-value="5">5개월</button>
-                    <button type="button" class="installment-btn" data-value="6">6개월</button>
-                    <button type="button" class="installment-btn" data-value="7">7개월</button>
-                    <button type="button" class="installment-btn" data-value="8">8개월</button>
-                    <button type="button" class="installment-btn" data-value="9">9개월</button>
-                    <button type="button" class="installment-btn" data-value="10">10개월</button>
-                    <button type="button" class="installment-btn" data-value="11">11개월</button>
-                    <button type="button" class="installment-btn" data-value="12">12개월</button>
-                    <button type="button" class="installment-btn" data-value="13">13개월</button>
-                    <button type="button" class="installment-btn" data-value="14">14개월</button>
-                    <button type="button" class="installment-btn" data-value="15">15개월</button>
-                    <button type="button" class="installment-btn" data-value="16">16개월</button>
-                    <button type="button" class="installment-btn" data-value="17">17개월</button>
-                    <button type="button" class="installment-btn" data-value="18">18개월</button>
-                    <button type="button" class="installment-btn" data-value="19">19개월</button>
-                    <button type="button" class="installment-btn" data-value="20">20개월</button>
-                    <button type="button" class="installment-btn" data-value="21">21개월</button>
-                    <button type="button" class="installment-btn" data-value="22">22개월</button>
-                    <button type="button" class="installment-btn" data-value="23">23개월</button>
-                    <button type="button" class="installment-btn" data-value="24">24개월</button>
-                  </div>
-                  <div class="installment-selected mt15">
-                    <p class="text-center text-muted">선택됨: <span id="installmentSpan" class="font-weight-bold">2개월</span></p>
-                  </div>
-                  <input id="installment-select" type="hidden" value="2" />
-                </div>
-              </div>
-
-              <style>
-                .payment-method-group {
-                  display: flex;
-                  gap: 10px;
-                  margin-bottom: 20px;
-                }
-
-                .payment-method-btn {
-                  flex: 1;
-                  cursor: pointer;
-                }
-
-                .payment-method-btn .method-label {
-                  display: block;
-                  padding: 12px 20px;
-                  border: 2px solid #e0e0e0;
-                  border-radius: 8px;
-                  text-align: center;
-                  font-size: 14px;
-                  font-weight: 500;
-                  transition: all 0.3s ease;
-                  background: #f9f9f9;
-                }
-
-                .payment-method-btn input:checked + .method-label {
-                  border-color: #e73d44;
-                  background: #e73d44;
-                  color: white;
-                }
-
-                .payment-method-btn.active .method-label {
-                  border-color: #e73d44;
-                  background: #e73d44;
-                  color: white;
-                }
-
-                .installment-grid {
-                  display: grid;
-                  grid-template-columns: repeat(4, 1fr);
-                  gap: 8px;
-                }
-
-                .installment-btn {
-                  padding: 10px 12px;
-                  border: 1px solid #ddd;
-                  border-radius: 6px;
-                  background: white;
-                  cursor: pointer;
-                  font-size: 13px;
-                  transition: all 0.2s ease;
-                  font-weight: 500;
-                }
-
-                .installment-btn:hover {
-                  border-color: #dc3545;
-                  background: #ffe5e8;
-                }
-
-                .installment-btn.selected {
-                  border-color: #e73d44;
-                  background: #e73d44;
-                  color: white;
-                }
-
-                .installment-selected {
-                  padding: 12px;
-                  background: #f5f5f5;
-                  border-radius: 6px;
-                  text-align: center;
-                }
-
-                @media (max-width: 576px) {
-                  .installment-grid {
-                    grid-template-columns: repeat(3, 1fr);
-                  }
-                }
-              </style>
-            </div>
-          </div>
-
-          <div class="btm-fixed-btn">
-            <a class="btn btn-primary btn-block" href="javascript:void(0)" onclick="onAmoutInputConfirm();">확인</a>
-          </div>
-        </div>
-        <!--// 페이지 끝 -->
-      </div>
-      <script type="text/javascript">
-        // 토스트 팝업 함수 (alert으로 원복)
-        function showToast(message, type = 'info', duration = 3000) {
-          alert(message);
-        }
-
-        const radioButtons = document.querySelectorAll('input[name="radio1"]');
-        const paymentMethodBtns = document.querySelectorAll('.payment-method-btn');
-        const installmentArea = document.getElementById('installment-area');
-        const installmentSpan = document.getElementById('installmentSpan');
-        const installmentSelect = document.getElementById('installment-select');
-        const installmentBtns = document.querySelectorAll('.installment-btn');
-
-        // 라디오 버튼 change 이벤트 (input 요소의 change 이벤트만 사용)
-        radioButtons.forEach((radio, index) => {
-          radio.addEventListener('change', function () {
-            // 모든 버튼의 active 클래스 제거 후 현재 클릭된 버튼만 active 추가
-            paymentMethodBtns.forEach((b) => b.classList.remove('active'));
-            paymentMethodBtns[index].classList.add('active');
-
-            const isInstallment = this.value === 'installment';
-            const amountValue = document.getElementById('mpmqr-amount').value.replace(/,/g, '');
-
-            console.log(isInstallment + ':' + amountValue);
-
-            if (isInstallment) {
-              if (!amountValue || parseInt(amountValue) < 50000) {
-                showToast('할부는 최소 50,000원 이상이어야 합니다.', 'error');
-                radioButtons[0].checked = true;
-                paymentMethodBtns[0].classList.add('active');
-                paymentMethodBtns[1].classList.remove('active');
-                return;
-              }
-              installmentArea.style.display = 'block';
-              installmentBtns[0].click(); // 첫 번째 옵션 자동 선택
-            } else {
-              installmentArea.style.display = 'none';
-              installmentSelect.value = '2';
-              installmentSpan.innerText = '2개월';
-            }
-          });
-        });
-
-        // label 클릭 시 라디오 버튼의 change 이벤트가 자동으로 발동됨
-
-        // 할부 기간 버튼 클릭
-        installmentBtns.forEach((btn) => {
-          btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            const value = this.getAttribute('data-value');
-
-            installmentBtns.forEach((b) => b.classList.remove('selected'));
-            this.classList.add('selected');
-
-            installmentSelect.value = value;
-            installmentSpan.innerText = value + '개월';
-          });
-        });
-
-        // 초기 선택 설정
-        installmentBtns[0].classList.add('selected');
-
-        const mpmqrAmount = document.getElementById('mpmqr-amount');
-        mpmqrAmount.addEventListener('input', function () {
-          const amountValue = document.getElementById('mpmqr-amount').value;
-          const numericValue = amountValue.replace(/,/g, '');
-          if (numericValue === '') {
-            document.getElementById('mpmqr-amount-desc').innerText = '';
-            return;
-          }
-          const formattedValue = parseInt(numericValue, 10).toLocaleString();
-          document.getElementById('mpmqr-amount-desc').innerText = formattedValue + '원';
-        });
-
-        const initMpmqrAmountBtn = document.getElementById('init-mpmqr-amount');
-        initMpmqrAmountBtn.addEventListener('click', function () {
-          onInitAmountInputState();
-        });
-
-        const onInitAmountInputState = () => {
-          document.getElementById('mpmqr-amount').value = '';
-          document.getElementById('mpmqr-amount-desc').innerText = '';
-          document.querySelector('input[name="radio1"][value="lumpsum"]').checked = true;
-          paymentMethodBtns[0].classList.add('active');
-          paymentMethodBtns[1].classList.remove('active');
-          installmentArea.style.display = 'none';
-          installmentSelect.value = '2';
-          installmentSpan.innerText = '2개월';
-        };
-
-        const onAmoutInputConfirm = async () => {
-          const radioBtnCheckValue = document.querySelector('input[name="radio1"]:checked').value;
-          const installmentValue = radioBtnCheckValue === 'lumpsum' ? 0 : document.getElementById('installment-select').value;
-          const amountValue = document.getElementById('mpmqr-amount').value;
-          const numericValue = amountValue.replace(/,/g, '');
-
-          console.log('numericValue:', numericValue);
-          console.log('radioBtnCheckValue:', radioBtnCheckValue);
-          console.log('installmentValue:', installmentValue);
-
-          if (amountValue === '') {
-            showToast('금액을 입력해주세요.', 'warning');
-            return;
-          } else if (amountValue < 10) {
-            showToast('금액은 최소 10원 이상이어야 합니다.', 'warning');
-            return;
-          }
-
-          let reqMpmqr = {
-            pim: 'DYNAMIC',
-            amount: Number(numericValue),
-            installment: Number(installmentValue),
-          };
-
-          const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.MPMQR, reqMpmqr);
-          console.log(data);
-          if (data.ok) {
-            const { pim, qrBase64Image, merchantName } = data;
-            onQrInfoUpdate(data);
-            onChangeState();
-            onInitAmountInputState();
-          } else {
-            const status = data.status;
-            if (status === 401) {
-              console.log('로그인이 필요합니다.', JSON.stringify(data));
-              const navi_loginId = document.getElementById('navi-login-id').innerText;
-              PasswordModal.open({
-                loginId: navi_loginId,
-                onSuccessCallback: function (res) {
-                  onAmoutInputConfirm();
-                },
-                onCancelCallback: function () {
-                  console.log('cancel authentication');
-                },
-              });
-            } else {
-              onInitAmountInputState();
-              const errorMsg = data || data.message || 'MPMQR 생성에 실패했습니다.';
-              showToast(errorMsg, 'error');
-            }
-          }
-        };
-      </script>
-    </div>
+    <th:block th:replace="~{fragments/mpmqr-create :: amountInputStyle}"></th:block>
+    <div th:replace="~{fragments/mpmqr-create :: amountInputSection(${homeMpmqrResDto.homeMpmqrMain.merchantName})}"></div>
+    <div th:replace="~{fragments/cpmqr-payment :: amountInputSection(${homeMpmqrResDto.homeMpmqrMain.merchantName})}"></div>
     <div th:replace="~{fragments/modals/common-modal :: passwordContent}"></div>
     <div th:replace="~{fragments/modals/common-modal :: confirmModal}"></div>
     <div th:replace="~{fragments/modals/common-modal :: loadingModal}"></div>
@@ -465,16 +166,29 @@
     const btnChangeMerchantName = document.getElementById('btn-change-merchant-name');
     btnChangeMerchantName && btnChangeMerchantName.addEventListener('click', onMerchantNameChange);
 
-    let current_state = 'state-mpmqr'; //state-amountinput
-    const onChangeState = () => {
-      if (current_state === 'state-mpmqr') {
+    let current_state = 'state-mpmqr'; //state-amountinput , state-cpmqrpayment
+    const onChangeState = (state) => {
+      if (state === 'state-mpmqr') {
+        current_state = 'state-mpmqr';
+        $('#state-mpmqr').show();
+        $('#state-amountinput').hide();
+        $('#state-cpmqrpayment').hide();
+
+      } else if(state === 'state-amountinput') {
         current_state = 'state-amountinput';
         $('#state-mpmqr').hide();
         $('#state-amountinput').show();
+        $('#state-cpmqrpayment').hide();
+      } else if (state === 'state-cpmqrpayment') {
+        current_state = 'state-cpmqrpayment';
+        $('#state-mpmqr').hide();
+        $('#state-amountinput').hide();
+        $('#state-cpmqrpayment').show();
       } else {
         current_state = 'state-mpmqr';
-        $('#state-amountinput').hide();
         $('#state-mpmqr').show();
+        $('#state-amountinput').hide();
+        $('#state-cpmqrpayment').hide();
       }
     };
 
