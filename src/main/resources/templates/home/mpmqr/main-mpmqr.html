@@ -10,20 +10,10 @@
     <script src="/js/bootstrap.min.js"></script>
     <link href="/css/common.css" rel="stylesheet" />
     <script src="/js/common.js"></script>
+    <script src="/js/qrpay_sdk.min.js"></script>
     <script src="/js/qrpay-bridge.js"></script>
     <script src="/js/qrpay-nfilter.js"></script>
 
-    <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'local')}">
-      <script th:src="@{/js/qrpay_sdk.dev.js}"></script>
-    </th:block>
-
-    <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'dev')}">
-      <script th:src="@{/js/qrpay_sdk.dev.js}"></script>
-    </th:block>
-
-    <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'prod')}">
-      <script th:src="@{/js/qrpay_sdk.prod.js}"></script>
-    </th:block>
   </head>
 
   <body>
@@ -538,7 +528,7 @@
         document.getElementById('main-mpmqr-amount').value = '';
         document.getElementById('installment-label').innerText = '';
         $('#main-qr-init').hide();
-        sessionStorage.clear();
+        ['pim', 'installment-label', 'amount'].forEach(k => sessionStorage.removeItem(k));
       }
     };
     window.addEventListener('pageshow', (event) => {
@@ -553,7 +543,7 @@
           $('#main-qr-init').show();
         }
       } else {
-        sessionStorage.clear();
+        ['pim', 'installment-label', 'amount'].forEach(k => sessionStorage.removeItem(k));
       }
     });
   </script>

@@ -268,7 +268,8 @@
 
               // nFilter 사용 가능 여부 판별 (모바일이면 true)
               _useNFilter: function () {
-                return typeof QrpayNfilterBridge !== 'undefined' && !QrpayNfilterBridge.isOther();
+                return false;
+                //return typeof QrpayNfilterBridge !== 'undefined' && !QrpayNfilterBridge.isOther();
               },
 
               // nFilter 키패드 표시 및 콜백 등록
@@ -327,11 +328,13 @@
               verify: function () {
                 // nFilter 사용 시 encData, 로컬이면 평문 password 전달
                 const pwdToSend = this._useNFilter() ? this.encData : this.password;
+                const loginDeviceInfo = QrpayBridge.getDevice();
+                const keypadRefId = QrpayNfilterBridge.getKeypadRefId();
 
                 Loading.show();
                 this._hideNFilterKeypad();
                 qrpaySdk
-                  .authenticate(this.currentId, pwdToSend)
+                  .authenticate(this.currentId, pwdToSend, keypadRefId, loginDeviceInfo)
                   .then((data) => {
                     console.log('인증 응답:', data);
 

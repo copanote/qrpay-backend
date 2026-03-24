@@ -12,4 +12,5 @@ public class RequestLogin {
 
     @NotBlank
     private String password;
+    private String keypadRefId;
 }

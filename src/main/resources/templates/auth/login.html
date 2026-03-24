@@ -17,9 +17,6 @@
   <script>
     // QRPAY SDK 초기화
     document.addEventListener('DOMContentLoaded', function () {
-      // SDK 초기화
-      QrpayBridge.getDevice();
-
 
       // 로그인 버튼 클릭 이벤트
       document.querySelector('.btn-primary').addEventListener('click', function (e) {
@@ -37,26 +34,23 @@
 
     function handleLogin() {
       const loginId = document.getElementById('qr-loginId').value.trim();
-      const password = document.getElementById('qr-password').value.trim();
 
-      // 입력값 검증
       if (!loginId) {
         alert('아이디를 입력해주세요.');
         document.getElementById('qr-loginId').focus();
         return;
       }
 
-      if (!password) {
+      if (!_encPassword) {
         alert('비밀번호를 입력해주세요.');
-        document.getElementById('qr-password').focus();
         return;
       }
 
+      const loginDeviceInfo = QrpayBridge.getDevice();
+      const keypadRefId = QrpayNfilterBridge.getKeypadRefId();
 
-      let deviceInfo = window.qrpay && window.qrpay.deviceInfo || {};
-      deviceInfo = {};
       qrpaySdk
-        .authenticate(loginId, password, deviceInfo)
+        .authenticate(loginId, _encPassword, keypadRefId, loginDeviceInfo)
         .then((data) => {
           console.log('인증 응답:', data);
 
@@ -127,51 +121,63 @@
 </div>
 <script>
   const passwordInput = document.getElementById('qr-password');
+  let _keypadVisible = false;
+  let _encPassword = '';
+
+  const closeQrKeypad = () => {
+    if (QrpayNfilterBridge.isOther()) {
+      passwordInput.blur();
+    } else {
+      QrpayNfilterBridge.hideNFilterKeypad();
+    }
+    _keypadVisible = false;
+  };
 
   const openQrKeypad = () => {
-    const deviceType = QrpayNfilterBridge.getDeviceType();
-
-    if (deviceType === 'other') {
+    if (QrpayNfilterBridge.isOther() || true) {
       // [로컬 테스트용] 브릿지를 호출하지 않고 직접 입력을 받음
-      console.log("로컬 환경: 기본 키보드 입력을 허용합니다.");
       passwordInput.readOnly = false;
       passwordInput.focus();
+      _keypadVisible = true;
 
-      // 사용자가 직접 타이핑할 때 콜백 로직을 흉내냄
       passwordInput.oninput = (e) => {
         const currentVal = e.target.value;
         const currentLen = currentVal.length;
-
-        // 네이티브 콜백 함수(window.showNFilterKeypadCallBack)를 직접 호출하여 로직 통일
-        // 로컬에서는 암호화가 안 되므로 값 자체를 encData로 넘김
-        window.showNFilterKeypadCallBack(currentVal, 'qrpayKeypad', currentLen);
+        handleKeypadInput(currentVal, currentVal);
       };
+
+      // 로컬에서 blur 시 상태 동기화
+      passwordInput.onblur = () => { _keypadVisible = false; };
 
     } else {
       // [실제 앱 환경]
-      passwordInput.readOnly = true; // 직접 입력 방지
-      showNFilterKeypad('num', 'qrpayKeypad', 6, '비밀번호 입력', 'Y', (encData, name, dummyData) => {
-        // 위에서 정의한 공통 콜백 처리 로직
-        handleKeypadInput(encData, dummyData.length);
+      passwordInput.readOnly = true;
+      _keypadVisible = true;
+      QrpayNfilterBridge.showNFilterKeypad('num', 'qrpayKeypad', 6, '비밀번호 입력', 'Y', (encData, name, dummyData) => {
+        handleKeypadInput(encData, dummyData);
       });
     }
   };
 
   // 공통 처리 로직 (브릿지 콜백 & 로컬 input 공용)
-  const handleKeypadInput = (encData, inputCount) => {
-    const passwordInput = document.getElementById('qr-password');
+  const handleKeypadInput = (encData, dummyData) => {
+    _encPassword = encData;
+    passwordInput.value = dummyData;
 
-    // 별표 표시
-    passwordInput.value = '*'.repeat(inputCount);
-
-    if (inputCount === 6) {
-      console.log("입력 완료:", encData);
-      // 후속 작업 (API 호출 등)
+    if (dummyData.length === 6) {
+      closeQrKeypad();
+      handleLogin();
     }
   };
 
-  // 실행
-  passwordInput.addEventListener('click', openQrKeypad);
+  // 클릭 시 토글
+  passwordInput.addEventListener('click', () => {
+    if (_keypadVisible) {
+      closeQrKeypad();
+    } else {
+      openQrKeypad();
+    }
+  });
 
 </script>
 <div th:replace="~{fragments/modals/common-modal :: passwordContent}"></div>

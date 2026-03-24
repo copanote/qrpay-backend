@@ -41,6 +41,7 @@ public class SecurityConfig {
 
 
     private static final String[] nonAuthenticatedApis = {
+            "/qrpay/auth/**",
             "/auth/**",
             "/pages/**",
             "/qrpay/api/open/**",

@@ -28,7 +28,7 @@ public class AuthController {
     private final AuthService authService;
     private final MemberService memberService;
 
-    @PostMapping(value = "/auth/login")
+    @PostMapping(value = "/qrpay/auth/login")
     @ResponseBody
     public ResponseEntity<?> login(@RequestBody @Validated RequestLogin requestLogin) {
 
@@ -56,6 +56,12 @@ public class AuthController {
         //        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         //        Member member = userDetails.qrpayMember();
+
+        String keypadRefId = requestLogin.getKeypadRefId();
+        if (keypadRefId == null || keypadRefId.isEmpty() ||
+                keypadRefId.contains("QRPAY_LOCAL")) {
+            //local test login
+        }
 
         Member member = authService.login(requestLogin.getLoginId(), requestLogin.getPassword());
         JwtToken jwt =
