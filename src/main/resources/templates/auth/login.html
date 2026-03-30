@@ -12,7 +12,7 @@
   <script src="/js/common.js"></script>
   <script src="/js/qrpay_sdk.min.js"></script>
   <script src="/js/qrpay-bridge.js"></script>
-  <script src="/js/qrpay-nfilter.js"></script>
+
 
   <script>
     // QRPAY SDK 초기화
@@ -47,7 +47,7 @@
       }
 
       const loginDeviceInfo = QrpayBridge.getDevice();
-      const keypadRefId = QrpayNfilterBridge.getKeypadRefId();
+      const keypadRefId = QrpayBridge.getKeypadRefId();
 
       qrpaySdk
         .authenticate(loginId, _encPassword, keypadRefId, loginDeviceInfo)
@@ -125,16 +125,16 @@
   let _encPassword = '';
 
   const closeQrKeypad = () => {
-    if (QrpayNfilterBridge.isOther()) {
+    if (QrpayBridge.isOther()) {
       passwordInput.blur();
     } else {
-      QrpayNfilterBridge.hideNFilterKeypad();
+      QrpayBridge.hideNFilterKeypad();
     }
     _keypadVisible = false;
   };
 
   const openQrKeypad = () => {
-    if (QrpayNfilterBridge.isOther() || true) {
+    if (QrpayBridge.isOther() || true) {
       // [로컬 테스트용] 브릿지를 호출하지 않고 직접 입력을 받음
       passwordInput.readOnly = false;
       passwordInput.focus();
@@ -153,7 +153,7 @@
       // [실제 앱 환경]
       passwordInput.readOnly = true;
       _keypadVisible = true;
-      QrpayNfilterBridge.showNFilterKeypad('num', 'qrpayKeypad', 6, '비밀번호 입력', 'Y', (encData, name, dummyData) => {
+      QrpayBridge.showNFilterKeypad('num', 'qrpayKeypad', 6, '비밀번호 입력', 'Y', (encData, name, dummyData) => {
         handleKeypadInput(encData, dummyData);
       });
     }

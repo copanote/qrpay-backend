@@ -268,14 +268,13 @@
 
               // nFilter 사용 가능 여부 판별 (모바일이면 true)
               _useNFilter: function () {
-                return false;
-                //return typeof QrpayNfilterBridge !== 'undefined' && !QrpayNfilterBridge.isOther();
+                return typeof QrpayBridge !== 'undefined' && !QrpayBridge.isOther();
               },
 
               // nFilter 키패드 표시 및 콜백 등록
               _showNFilterKeypad: function () {
                 this._nFilterKeypadVisible = true;
-                QrpayNfilterBridge.showNFilterKeypad(
+                QrpayBridge.showNFilterKeypad(
                   'num',
                   'pwdEncrypt',
                   this.maxLen,
@@ -291,7 +290,7 @@
                 );
               },
               _hideNFilterKeypad: function () {
-               QrpayNfilterBridge.hideNFilterKeypad(() => {
+               QrpayBridge.hideNFilterKeypad(() => {
                     this._nFilterKeypadVisible = false;
                });
               },
@@ -329,7 +328,7 @@
                 // nFilter 사용 시 encData, 로컬이면 평문 password 전달
                 const pwdToSend = this._useNFilter() ? this.encData : this.password;
                 const loginDeviceInfo = QrpayBridge.getDevice();
-                const keypadRefId = QrpayNfilterBridge.getKeypadRefId();
+                const keypadRefId = QrpayBridge.getKeypadRefId();
 
                 Loading.show();
                 this._hideNFilterKeypad();
@@ -413,9 +412,7 @@
               },
 
               onPasswordAreaClick: function () {
-                if (this._useNFilter() ) {
-                  this._showNFilterKeypad();
-                }
+                this._showNFilterKeypad();
               },
 
               // UI 점(dot) 업데이트 - 개수 기반

@@ -12,7 +12,6 @@
     <script src="/js/common.js"></script>
     <script src="/js/qrpay_sdk.min.js"></script>
     <script src="/js/qrpay-bridge.js"></script>
-    <script src="/js/qrpay-nfilter.js"></script>
 
   </head>
 
@@ -66,13 +65,13 @@
               </div>
               <div class="form-group btm-form">
                 <!-- 2019-05-08 -->
-                <div class="btm-text">
+                <div class="btm-text" onclick="onCpmqrPayment();">
                   <button type="button"><i class="icon-scan mr5"></i> QR스캔</button>
                 </div>
                 <p class="tit text-muted">결제금액</p>
                 <div class="input-price">
                   <span class="txt font-lato">&#8361;</span>
-                  <input id="main-mpmqr-amount" type="text" class="form-control font-lato" placeholder="금액을 입력해주세요" value="" onclick="onChangeState();" onkeyup="inputNumberFormat(this)" />
+                  <input id="main-mpmqr-amount" type="text" class="form-control font-lato" placeholder="금액을 입력해주세요" value="" onclick="onChangeState('state-amountinput');" onkeyup="inputNumberFormat(this)" />
                 </div>
                 <div class="row mt10">
                   <div class="col align-self-end">
@@ -260,5 +259,13 @@
         ['pim', 'installment-label', 'amount'].forEach(k => sessionStorage.removeItem(k));
       }
     });
+
+    const onCpmqrPayment = () => {
+      QrpayBridge.getTrnsData( (cpmqrPayload) => {
+        onChangeState('state-cpmqrpayment')
+        console.log('cpmQrPayload:' +cpmqrPayload);
+      });
+    }
+
   </script>
 </html>

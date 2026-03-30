@@ -10,18 +10,8 @@
     <script src="/js/bootstrap.min.js"></script>
     <link href="/css/common.css" rel="stylesheet" />
     <script src="/js/common.js"></script>
-
-    <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'local')}">
-      <script th:src="@{/js/qrpay_sdk.dev.js}"></script>
-    </th:block>
-
-    <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'dev')}">
-      <script th:src="@{/js/qrpay_sdk.dev.js}"></script>
-    </th:block>
-
-    <th:block th:if="${#arrays.contains(@environment.getActiveProfiles(), 'prod')}">
-      <script th:src="@{/js/qrpay_sdk.prod.js}"></script>
-    </th:block>
+    <script src="/js/qrpay_sdk.min.js"></script>
+    <script src="/js/qrpay-bridge.js"></script>
   </head>
 
   <body>

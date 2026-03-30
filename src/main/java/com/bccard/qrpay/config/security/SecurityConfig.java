@@ -46,6 +46,7 @@ public class SecurityConfig {
             "/pages/**",
             "/qrpay/api/open/**",
             "/external/**",
+            "/qrpay/external/**",
             "/error",
             "/.well-known/**",
             "/fonts/**",
