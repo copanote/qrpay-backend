@@ -183,7 +183,7 @@
           };
 
           try {
-            const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.MPMQR, reqData);
+            const data = await qrpaySdk.fetchPostAsync(REST_APIS.MERCHANT.MPMQR, reqData);
             if (data.ok) {
               onQrInfoUpdate(data);
               onChangeState('state-mpmqr');

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no"/>
     <title>BC</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <script src="/js/jquery-3.3.1.slim.min.js.js"></script>
@@ -135,7 +135,7 @@
         return;
       }
 
-      const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.CHANGE_NAME, { name: changedName });
+      const data = await qrpaySdk.fetchPostAsync(REST_APIS.MERCHANT.CHANGE_NAME, { name: changedName });
       console.log(data);
       if (data.ok) {
         const { pim, qrBase64Image, merchantName, amount, installment } = data.data;
@@ -192,7 +192,7 @@
     };
 
     const reqStaticMpmQr = async () => {
-      const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.MPMQR, { pim: 'STATIC' });
+      const data = await qrpaySdk.fetchPostAsync(REST_APIS.MERCHANT.MPMQR, { pim: 'STATIC' });
       console.log(data);
       if (data.ok) {
         onQrInfoUpdate(data);

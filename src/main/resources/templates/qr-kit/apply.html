@@ -244,7 +244,7 @@
           return;
         }
 
-        const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.CHANGE_NAME, { name: changedName });
+        const data = await qrpaySdk.fetchPostAsync(REST_APIS.MERCHANT.CHANGE_NAME, { name: changedName });
         console.log(data);
         if (data.ok) {
           const { pim, qrBase64Image, merchantName, amount, installment } = data.data;

@@ -184,7 +184,7 @@
 
           try {
             // CPM 결제에 맞는 API 엔드포인트로 변경이 필요할 수 있습니다.
-            // const data = await qrpaySdk.fetchPostAsync(qrpaySdk.REST_APIS.MERCHANT.CPMQR, reqData);
+            // const data = await qrpaySdk.fetchPostAsync(REST_APIS.MERCHANT.CPMQR, reqData);
 
             if (typeof data !== 'undefined' && data.ok) {
               onChangeState();

@@ -271,7 +271,8 @@ const onLogout = async () => {
   } catch (error) {
     console.error(error);
   }
-  window.location.replace(qrpaySdk.PAGES_APIS.LOGIN_PAGE || '/pages/login');
+
+  window.location.replace(PAGES_APIS.PAGES_LOGIN || '/pages/login');
 };
 $(document).ready(function () {
   const logoutBtn = document.getElementById('btn-logout');

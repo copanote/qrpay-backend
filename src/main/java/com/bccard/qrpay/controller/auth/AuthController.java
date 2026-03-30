@@ -128,7 +128,7 @@ public class AuthController {
         return ResponseEntity.ok().headers(headers).body(newAccessToken);
     }
 
-    @PostMapping(value = "/auth/logout")
+    @PostMapping(value = "/qrpay/auth/logout")
     @ResponseBody
     public ResponseEntity<?> logout(@RequestBody JwtToken refreshToken, HttpServletRequest request) {
         /*
