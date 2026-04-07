@@ -1,7 +1,7 @@
 package com.bccard.qrpay.config.web;
 
 import com.bccard.qrpay.config.web.argumentresolver.LoginMemberArgumentResolver;
-import com.bccard.qrpay.filter.GlobalLoggingPreparationFilter;
+import com.bccard.qrpay.filter.RequestTracingFilter;
 import com.bccard.qrpay.interceptor.LoginRedirectInterceptor;
 import jakarta.servlet.Filter;
 import java.util.List;
@@ -20,7 +20,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final LoginMemberArgumentResolver loginMemberArgumentResolver;
     private final LoginRedirectInterceptor loginRedirectInterceptor;
-    private final GlobalLoggingPreparationFilter globalLoggingPreparationFilter;
+    private final RequestTracingFilter globalLoggingPreparationFilter;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {

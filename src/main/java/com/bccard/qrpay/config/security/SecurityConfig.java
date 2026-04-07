@@ -109,6 +109,9 @@ public class SecurityConfig {
         // 자격 증명(쿠키, 인증 헤더) 허용 여부 (Access-Control-Allow-Credentials)
         configuration.setAllowCredentials(true);
 
+        // 클라이언트 JS에서 읽을 수 있도록 노출할 응답 헤더
+        configuration.setExposedHeaders(Arrays.asList("X-Correlation-Id", "X-Transaction-ID"));
+
         // Preflight 요청 결과 캐시 시간 (Access-Control-Max-Age)
         configuration.setMaxAge(3600L); // 1시간
 

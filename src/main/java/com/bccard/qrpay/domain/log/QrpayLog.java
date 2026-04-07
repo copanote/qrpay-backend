@@ -107,17 +107,26 @@ public class QrpayLog extends BaseEntity implements Persistable<Long> {
 
     public static QrpayLog restApiLog(
             Long id, String correlationId, String apiPath, String status, String request, String response) {
-        LogMessage reqLog = LogMessage.create().body(request).build();
-        LogMessage resLog = LogMessage.create().body(response).build();
-
         return QrpayLog.builder()
                 .id(id)
                 .createdAtSss(MpmDateTimeUtils.generateDtmNow(MpmDateTimeUtils.PATTERN_YEAR_TO_MICROSEC))
                 .affiliateTransactionId(correlationId)
                 .messageId(StringUtils.truncate(apiPath, 50))
                 .responseCode(status)
-                .fepFldMessage(reqLog)
-                .logMessage(resLog)
+                .fepFldMessage(LogMessage.create().body(request).build())
+                .logMessage(LogMessage.create().body(response).build())
+                .build();
+    }
+
+    public static QrpayLog pageRequestLog(
+            Long id, String correlationId, String apiPath, String status, String request) {
+        return QrpayLog.builder()
+                .id(id)
+                .createdAtSss(MpmDateTimeUtils.generateDtmNow(MpmDateTimeUtils.PATTERN_YEAR_TO_MICROSEC))
+                .affiliateTransactionId(correlationId)
+                .messageId(StringUtils.truncate(apiPath, 50))
+                .responseCode(status)
+                .fepFldMessage(LogMessage.create().body(request).build())
                 .build();
     }
 
